@@ -1,0 +1,216 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Live-quiz students without a portal account sign in anonymously.
+    function isAnonymous() {
+      return isAuthenticated() && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    function isAccountUser() {
+      return isAuthenticated() && !isAnonymous();
+    }
+
+    function isTeacher() {
+      return isAccountUser()
+        && exists(/databases/$(database)/documents/teachers/$(request.auth.uid))
+        && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.role == 'teacher';
+    }
+
+    function liveCompetition(code) {
+      return get(/databases/$(database)/documents/liveCompetitions/$(code)).data;
+    }
+
+    // The teacher account that created liveCompetitions/{code}.
+    function isLiveHost(code) {
+      return isAuthenticated() && liveCompetition(code).get('hostUid', null) == request.auth.uid;
+    }
+
+    function isLiveJoinable(code) {
+      return liveCompetition(code).get('status', 'active') != 'cancelled'
+        && liveCompetition(code).get('status', 'active') != 'completed'
+        && liveCompetition(code).get('phase', 'waiting') != 'finished';
+    }
+
+    // Answers are accepted only for the current question, while it is open (+3s network grace).
+    function isAnswerWindowOpen(code, questionIndex) {
+      return liveCompetition(code).get('phase', '') == 'question'
+        && liveCompetition(code).get('currentQuestionIndex', -1) == questionIndex
+        && liveCompetition(code).get('questionStartedAt', null) != null
+        && request.time <= liveCompetition(code).questionStartedAt
+             + duration.value(int(liveCompetition(code).get('questionDuration', 60)) + 3, 's');
+    }
+
+    function isValidName(name) {
+      return name is string && name.size() > 0 && name.size() <= 25;
+    }
+
+    // =====================================================
+    // 1. TEACHERS COLLECTION
+    // =====================================================
+    match /teachers/{teacherId} {
+      allow read: if true;
+      // A teacher profile is keyed by its own Firebase Auth uid.
+      allow create, update: if isAccountUser() && request.auth.uid == teacherId;
+      allow delete: if false;
+    }
+
+    // =====================================================
+    // 2. LEGACY COLLECTIONS (no longer written by the app)
+    // =====================================================
+    match /competitions/{competitionId} {
+      allow read: if true;
+      allow create, update: if isTeacher();
+      allow delete: if isAuthenticated() && (resource.data.teacherId == request.auth.uid);
+    }
+
+    match /competitionQuestions/{questionId} {
+      allow read: if true;
+      allow create, update, delete: if isTeacher();
+    }
+
+    match /participants/{participantId} {
+      allow read: if true;
+      allow create, update, delete: if isTeacher();
+    }
+
+    match /competitionRounds/{roundId} {
+      allow read: if true;
+      allow create, update, delete: if isTeacher();
+    }
+
+    match /competitionAnswers/{answerId} {
+      allow read: if true;
+      allow create, update: if isTeacher();
+      allow delete: if false;
+    }
+
+    // =====================================================
+    // 3. COMPETITION RESULTS & HISTORY (written by the host when a quiz ends)
+    // =====================================================
+    match /competitionResults/{resultId} {
+      allow read: if true;
+      allow create, update, delete: if isTeacher();
+    }
+
+    match /competitionHistory/{historyId} {
+      allow read: if true;
+      allow create, update: if isTeacher();
+      allow delete: if false;
+    }
+
+    // =====================================================
+    // 4. PRESERVED STUDENT COLLECTIONS (DO NOT ALTER)
+    // =====================================================
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isAuthenticated() && (request.auth.uid == userId || true);
+    }
+
+    match /quizHistory/{historyId} {
+      allow read, write: if true;
+    }
+
+    match /cachedQuestions/{subjectSlug} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /staffQuizzes/{quizId} {
+      allow read, write: if true;
+    }
+
+    // =====================================================
+    // 5. LIVE COMPETITIONS
+    //    liveCompetitions/{code}                     shared state, written only by the host
+    //    liveCompetitions/{code}/hostData/answerKey  correct answers, host only
+    //    liveCompetitions/{code}/participants/{uid}  one per student, identity fields only
+    //    liveCompetitions/{code}/answers/{uid}_{q}   one per student per question, create-once
+    // =====================================================
+    match /liveCompetitions/{code} {
+      // Anyone holding the code can read it; competitions cannot be enumerated.
+      allow get: if true;
+      allow list: if false;
+
+      allow create: if isTeacher()
+        && request.resource.data.hostUid == request.auth.uid
+        && request.resource.data.code == code
+        && request.resource.data.competitionCode == code
+        && request.resource.data.phase == 'waiting';
+
+      // Only the host changes phase/question/timer. Competitions created before hostUid
+      // existed can be claimed once by a teacher, after which the same rule applies.
+      allow update: if (isAuthenticated()
+          && resource.data.get('hostUid', null) == request.auth.uid
+          && request.resource.data.hostUid == request.auth.uid)
+        || (!('hostUid' in resource.data) && isTeacher());
+
+      allow delete: if isAuthenticated() && resource.data.get('hostUid', null) == request.auth.uid;
+
+      match /hostData/{docId} {
+        allow read, write: if isLiveHost(code);
+      }
+
+      match /participants/{participantId} {
+        allow read: if true;
+
+        // Students register only themselves, with identity fields; scores are host-written.
+        allow create: if isAuthenticated()
+          && participantId == request.auth.uid
+          && request.resource.data.keys().hasOnly(['participantId', 'id', 'studentName', 'name', 'competitionCode', 'connected', 'joinedAt', 'lastSeen'])
+          && request.resource.data.participantId == participantId
+          && request.resource.data.id == participantId
+          && request.resource.data.competitionCode == code
+          && isValidName(request.resource.data.studentName)
+          && request.resource.data.name == request.resource.data.studentName
+          && request.resource.data.connected == true
+          && request.resource.data.joinedAt == request.time
+          && request.resource.data.lastSeen == request.time
+          && isLiveJoinable(code);
+
+        allow update: if isLiveHost(code)
+          || (isAuthenticated()
+            && participantId == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['studentName', 'name', 'connected', 'lastSeen'])
+            && isValidName(request.resource.data.studentName)
+            && request.resource.data.name == request.resource.data.studentName
+            && request.resource.data.connected is bool
+            && request.resource.data.lastSeen == request.time);
+
+        allow delete: if isLiveHost(code);
+      }
+
+      match /answers/{answerId} {
+        allow read: if isLiveHost(code)
+          || (isAuthenticated() && resource.data.participantId == request.auth.uid);
+
+        // A student submits only the selected option, once, for the open question.
+        // The document id pins it to that student and question, so it can't overwrite anyone.
+        allow create: if isAuthenticated()
+          && request.resource.data.keys().hasOnly(['participantId', 'studentName', 'competitionCode', 'questionIndex', 'selectedOption', 'answeredAt'])
+          && request.resource.data.participantId == request.auth.uid
+          && request.resource.data.questionIndex is int
+          && answerId == request.auth.uid + '_' + string(request.resource.data.questionIndex)
+          && request.resource.data.selectedOption is int
+          && request.resource.data.selectedOption >= 0
+          && request.resource.data.selectedOption <= 3
+          && request.resource.data.competitionCode == code
+          && isValidName(request.resource.data.studentName)
+          && request.resource.data.answeredAt == request.time
+          && exists(/databases/$(database)/documents/liveCompetitions/$(code)/participants/$(request.auth.uid))
+          && isAnswerWindowOpen(code, request.resource.data.questionIndex);
+
+        // Only the host grades (correctness and points come from the answer key).
+        allow update: if isLiveHost(code)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['graded', 'isCorrect', 'correctOption', 'pointsEarned', 'gradedAt']);
+
+        allow delete: if false;
+      }
+    }
+  }
+}

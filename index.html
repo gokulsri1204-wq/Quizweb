@@ -1,0 +1,2160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QuizMaster - Quiz Management System</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+<!-- ================= BACKGROUND ================= -->
+
+<div class="background">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+</div>
+
+<!-- ================= LOGIN PAGE ================= -->
+
+<section id="loginPage" class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-left">
+
+            <div class="brand-large">
+                <span>Q</span>
+                QuizMaster
+            </div>
+
+            <h1>
+                Learn.
+                <span>Practice.</span>
+                Succeed.
+            </h1>
+
+            <p>
+                Test your knowledge, improve your skills,
+                build your streak and become a Quiz Master.
+            </p>
+
+            <div class="login-features">
+
+                <div>🔥 Performance Streaks</div>
+                <div>🏆 Smart Grading</div>
+                <div>📊 Performance Analytics</div>
+                <div>🎖️ Achievement Badges</div>
+
+            </div>
+
+        </div>
+
+        <div class="auth-card">
+
+            <div class="auth-logo">
+                🎯
+            </div>
+
+            <h2 id="authTitle">Welcome Back!</h2>
+
+            <p id="authSubtitle">
+                Login to continue your learning journey.
+            </p>
+
+            <!-- Register Name -->
+
+            <div id="nameGroup" class="input-group hidden">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Enter your name">
+
+            </div>
+
+            <div class="input-group">
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="username"
+                    placeholder="Enter email address">
+
+            </div>
+
+            <div class="input-group">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password">
+
+            </div>
+
+            <p id="authError" class="auth-error"></p>
+
+            <button
+                class="primary-btn full-btn"
+                onclick="handleAuth()">
+
+                Login 🚀
+
+            </button>
+
+            <p class="switch-auth">
+
+                <span id="switchText">
+                    Don't have an account?
+                </span>
+
+                <button onclick="toggleAuth()">
+                    Register
+                </button>
+
+            </p>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <div class="auth-quick-actions">
+                <button
+                    class="live-join-quick-btn full-btn"
+                    onclick="openStudentJoinPage()">
+                    ⚡ Join Live Competition
+                </button>
+
+                <button
+                    class="teacher-portal-quick-btn full-btn"
+                    onclick="openTeacherAuth()">
+                    👨‍🏫 Teacher Portal Login
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MAIN APPLICATION ================= -->
+
+<div id="app" class="hidden">
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+    <div class="logo" onclick="showPage('dashboard')">
+        <span>Q</span>
+        QuizMaster
+    </div>
+
+    <nav>
+
+        <button onclick="showPage('dashboard')">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="showPage('subjects')">
+            📚 Subjects
+        </button>
+
+        <button onclick="showPage('history')">
+            📊 History
+        </button>
+
+        <button onclick="showPage('leaderboard')">
+            🏅 Leaderboard
+        </button>
+
+        <button class="nav-live-btn" onclick="openStudentJoinPage()">
+            ⚡ Join Live Quiz
+        </button>
+
+        <button class="nav-teacher-btn" onclick="openTeacherAuth()">
+            👨‍🏫 Teacher Portal
+        </button>
+
+    </nav>
+
+    <div class="nav-right">
+
+        <span id="navUser">
+            Student
+        </span>
+
+        <button
+            class="theme-btn"
+            onclick="toggleTheme()">
+            🌙
+        </button>
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="page active">
+
+    <div class="hero">
+
+        <div>
+
+            <p class="small-title">
+                WELCOME BACK 👋
+            </p>
+
+            <h1>
+                Hi,
+                <span id="studentName">
+                    Student
+                </span>!
+            </h1>
+
+            <h2>
+                Ready for your next challenge?
+            </h2>
+
+            <p class="hero-text">
+
+                Select a subject, test your knowledge,
+                earn grades and keep your streak alive.
+
+            </p>
+
+            <button
+                class="primary-btn"
+                onclick="showPage('subjects')">
+
+                Choose Subject 🚀
+
+            </button>
+
+        </div>
+
+        <div class="hero-card">
+
+            <div class="hero-trophy">
+                🏆
+            </div>
+
+            <p>Your Current Grade</p>
+
+            <h2 id="heroGrade">
+                -
+            </h2>
+
+            <span>
+                Keep improving!
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= STATS ================= -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔥
+            </div>
+
+            <div>
+
+                <p>Current Streak</p>
+
+                <h2 id="currentStreak">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🏆
+            </div>
+
+            <div>
+
+                <p>Best Streak</p>
+
+                <h2 id="bestStreak">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <div>
+
+                <p>Quizzes Taken</p>
+
+                <h2 id="quizCount">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <div>
+
+                <p>Average Score</p>
+
+                <h2 id="averageScore">
+                    0%
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= STREAK ================= -->
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="small-title">
+                    PERFORMANCE STREAK
+                </p>
+
+                <h2>
+                    🔥 Keep the Fire Alive!
+                </h2>
+
+            </div>
+
+            <div class="streak-number">
+
+                <span id="streakDisplay">
+                    0
+                </span>
+
+                🔥
+
+            </div>
+
+        </div>
+
+        <div class="progress-container">
+
+            <div
+                id="streakProgress"
+                class="progress-bar">
+            </div>
+
+        </div>
+
+        <p id="streakMessage">
+
+            Complete your first quiz to start your streak!
+
+        </p>
+
+    </div>
+
+
+    <!-- ================= SUBJECT PERFORMANCE ================= -->
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="small-title">
+                    SUBJECT PERFORMANCE
+                </p>
+
+                <h2>
+                    Your Skills
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div
+            id="subjectPerformance"
+            class="subject-performance">
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= BADGES ================= -->
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="small-title">
+                    ACHIEVEMENTS
+                </p>
+
+                <h2>
+                    Your Badges
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="badges">
+
+            <div
+                id="badgeBeginner"
+                class="badge locked">
+
+                <span>🌱</span>
+
+                <h3>
+                    Beginner
+                </h3>
+
+                <p>
+                    Complete your first quiz
+                </p>
+
+            </div>
+
+            <div
+                id="badgePerfect"
+                class="badge locked">
+
+                <span>💯</span>
+
+                <h3>
+                    Perfect Score
+                </h3>
+
+                <p>
+                    Score 100%
+                </p>
+
+            </div>
+
+            <div
+                id="badgeFire"
+                class="badge locked">
+
+                <span>🔥</span>
+
+                <h3>
+                    On Fire
+                </h3>
+
+                <p>
+                    Reach 5 streak
+                </p>
+
+            </div>
+
+            <div
+                id="badgeMaster"
+                class="badge locked">
+
+                <span>👑</span>
+
+                <h3>
+                    Quiz Master
+                </h3>
+
+                <p>
+                    Reach 10 streak
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SUBJECT PAGE ================= -->
+
+<section id="subjects" class="page">
+
+    <div class="page-heading">
+
+        <p class="small-title">
+            CHOOSE YOUR CHALLENGE
+        </p>
+
+        <h1>
+            Select a Subject 📚
+        </h1>
+
+        <p>
+            Choose a subject and start your quiz.
+        </p>
+
+    </div>
+
+    <div class="subject-grid" id="subjectGrid">
+
+        <!-- Java -->
+
+        <div
+            class="subject-card"
+            onclick="selectSubject('Java')">
+
+            <div class="subject-icon java">
+                ☕
+            </div>
+
+            <h2>
+                Java
+            </h2>
+
+            <p>
+                OOP, Strings, Arrays & Basics
+            </p>
+
+            <span>
+                Start Quiz →
+            </span>
+
+        </div>
+
+        <!-- Python -->
+
+        <div
+            class="subject-card"
+            onclick="selectSubject('Python')">
+
+            <div class="subject-icon python">
+                🐍
+            </div>
+
+            <h2>
+                Python
+            </h2>
+
+            <p>
+                Syntax, Lists, Functions & OOP
+            </p>
+
+            <span>
+                Start Quiz →
+            </span>
+
+        </div>
+
+        <!-- SQL -->
+
+        <div
+            class="subject-card"
+            onclick="selectSubject('SQL')">
+
+            <div class="subject-icon sql">
+                🗄️
+            </div>
+
+            <h2>
+                SQL
+            </h2>
+
+            <p>
+                Queries, Joins, Functions & DB
+            </p>
+
+            <span>
+                Start Quiz →
+            </span>
+
+        </div>
+
+        <!-- DBMS -->
+
+        <div
+            class="subject-card"
+            onclick="selectSubject('DBMS')">
+
+            <div class="subject-icon dbms">
+                🧠
+            </div>
+
+            <h2>
+                DBMS
+            </h2>
+
+            <p>
+                ER Model, ACID, Normalization
+            </p>
+
+            <span>
+                Start Quiz →
+            </span>
+
+        </div>
+
+        <!-- Web -->
+
+        <div
+            class="subject-card"
+            onclick="selectSubject('Web Development')">
+
+            <div class="subject-icon web">
+                🌐
+            </div>
+
+            <h2>
+                Web Development
+            </h2>
+
+            <p>
+                HTML, CSS & JavaScript
+            </p>
+
+            <span>
+                Start Quiz →
+            </span>
+
+        </div>
+
+        <!-- DSA -->
+
+        <div
+            class="subject-card"
+            onclick="selectSubject('DSA')">
+
+            <div class="subject-icon dsa">
+                📊
+            </div>
+
+            <h2>
+                DSA
+            </h2>
+
+            <p>
+                Arrays, Trees, Graphs & Algorithms
+            </p>
+
+            <span>
+                Start Quiz →
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= QUIZ PAGE ================= -->
+
+<section id="quiz" class="page">
+
+    <div class="quiz-wrapper">
+
+        <div class="quiz-top">
+
+            <div>
+
+                <p class="small-title">
+                    CURRENT QUIZ
+                </p>
+
+                <h2 id="quizSubject">
+                    Subject
+                </h2>
+
+            </div>
+
+            <div class="timer">
+
+                ⏱️
+
+                <span id="timer">
+                    60
+                </span>
+
+                s
+
+            </div>
+
+        </div>
+
+        <div class="quiz-progress">
+
+            <div id="quizProgress"></div>
+
+        </div>
+
+        <p id="questionNumber">
+            Question 1 of 5
+        </p>
+
+        <div class="question-card">
+
+            <h1 id="question">
+                Question
+            </h1>
+
+            <div
+                id="options"
+                class="options">
+
+            </div>
+
+        </div>
+
+        <div class="quiz-navigation">
+
+            <button
+                id="previousBtn"
+                class="secondary-btn"
+                onclick="previousQuestion()">
+
+                ← Previous
+
+            </button>
+
+            <button
+                id="nextBtn"
+                class="primary-btn"
+                onclick="nextQuestion()">
+
+                Next →
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= RESULT ================= -->
+
+<section id="result" class="page">
+
+    <div class="result-card">
+
+        <div class="result-icon">
+            🎉
+        </div>
+
+        <p class="small-title">
+            QUIZ COMPLETED
+        </p>
+
+        <h1>
+            Great Job!
+        </h1>
+
+        <p id="resultSubject">
+            Subject
+        </p>
+
+        <div class="score-circle">
+
+            <div>
+
+                <span id="finalScore">
+                    0%
+                </span>
+
+                <small>
+                    Score
+                </small>
+
+            </div>
+
+        </div>
+
+        <div class="grade-box">
+
+            <p>
+                Your Grade
+            </p>
+
+            <h2 id="finalGrade">
+                A+
+            </h2>
+
+        </div>
+
+        <div class="result-stats">
+
+            <div>
+
+                <span id="correctAnswers">
+                    0
+                </span>
+
+                <p>
+                    Correct
+                </p>
+
+            </div>
+
+            <div>
+
+                <span id="wrongAnswers">
+                    0
+                </span>
+
+                <p>
+                    Wrong
+                </p>
+
+            </div>
+
+            <div>
+
+                <span id="finalStreak">
+                    0
+                </span>
+
+                <p>
+                    🔥 Streak
+                </p>
+
+            </div>
+
+        </div>
+
+        <div
+            id="resultMessage"
+            class="result-message">
+
+        </div>
+
+        <div class="result-buttons">
+
+            <button
+                class="primary-btn"
+                onclick="startSelectedQuiz()">
+
+                🔄 Try Again
+
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="showPage('subjects')">
+
+                📚 Other Subject
+
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="showPage('dashboard')">
+
+                🏠 Dashboard
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= HISTORY ================= -->
+
+<section id="history" class="page">
+
+    <div class="history-container">
+
+        <p class="small-title">
+            YOUR PERFORMANCE
+        </p>
+
+        <h1>
+            Quiz History 📊
+        </h1>
+
+        <div id="historyList">
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= LEADERBOARD ================= -->
+
+<section id="leaderboard" class="page">
+
+    <div class="history-container">
+
+        <p class="small-title">
+            TOP PERFORMERS
+        </p>
+
+        <h1>
+            Student Leaderboard 🏅
+        </h1>
+
+        <div id="leaderboardList" class="leaderboard-wrapper">
+            <!-- Loaded dynamically from Firestore -->
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+<!-- =====================================================
+     TEACHER AUTHENTICATION PAGE
+===================================================== -->
+<section id="teacherAuthPage" class="auth-page hidden">
+    <div class="auth-container">
+        <div class="auth-left teacher-auth-left">
+            <div class="brand-large">
+                <span>👨‍🏫</span>
+                QuizMaster
+            </div>
+            <h1>
+                Teacher
+                <span>Portal.</span>
+                Host Live.
+            </h1>
+            <p>
+                Create and host live multiplayer quiz competitions. Track student responses in real time, display animated response graphs, and watch dynamic live leaderboards!
+            </p>
+            <div class="login-features">
+                <div>⚡ Kahoot-style Live Engine</div>
+                <div>📊 Real-time Bar Graphs</div>
+                <div>📱 Scannable QR Codes</div>
+                <div>👥 Support 100+ Students</div>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-logo teacher-logo-badge">
+                🎓
+            </div>
+            <h2 id="teacherAuthHeading">Teacher Sign In</h2>
+            <p id="teacherAuthSubtitle">Access your QuizMaster competition hub.</p>
+
+            <!-- REGISTRATION EXTRA FIELDS -->
+            <div id="teacherRegisterFields" class="hidden">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="teacherRegName" placeholder="Prof. Jane Doe">
+                </div>
+                <div class="input-group">
+                    <label>Teacher ID</label>
+                    <input type="text" id="teacherRegCode" placeholder="e.g. TCH001">
+                </div>
+                <div class="input-group">
+                    <label>Department</label>
+                    <input type="text" id="teacherRegDept" placeholder="e.g. Information Technology">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label id="teacherEmailLabel">Teacher Email / ID</label>
+                <input type="text" id="teacherId" placeholder="teacher@college.edu" value="teacher@skillquest.edu">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="teacherPassword" placeholder="Enter password" value="admin123">
+            </div>
+
+            <p id="teacherAuthError" class="auth-error"></p>
+
+            <button id="teacherAuthSubmitBtn" class="primary-btn full-btn teacher-primary-btn" onclick="handleTeacherLogin()">
+                Access Teacher Portal 🚀
+            </button>
+
+            <p class="switch-auth">
+                <span id="teacherSwitchText">Need a new teacher account?</span>
+                <button type="button" onclick="toggleTeacherAuthMode()">
+                    Register as Teacher
+                </button>
+            </p>
+
+            <div class="auth-helper-row" id="teacherDemoQuickRow">
+                <button type="button" class="link-btn" onclick="quickFillTeacherDemo()">
+                    ⚡ Use Demo Credentials (teacher@skillquest.edu / admin123)
+                </button>
+            </div>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <button class="secondary-btn full-btn" onclick="openStudentPortal()">
+                🎓 Back to Student Portal
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- =====================================================
+     TEACHER PORTAL APPLICATION
+===================================================== -->
+<div id="teacherApp" class="hidden">
+    <!-- TEACHER NAVBAR -->
+    <header class="navbar teacher-navbar">
+        <div class="logo" onclick="showTeacherPage('teacherDashboard')">
+            <span>👨‍🏫</span>
+            QuizMaster <small class="portal-badge">Teacher</small>
+        </div>
+
+        <nav>
+            <button id="tNavDashboard" class="active" onclick="showTeacherPage('teacherDashboard')">
+                🏠 Dashboard
+            </button>
+            <button id="tNavCreateQuiz" onclick="openStaffQuizBuilder()">
+                ✍️ Create Quiz
+            </button>
+            <button id="tNavCreate" onclick="showTeacherPage('teacherCreate')">
+                ➕ Auto Competition
+            </button>
+            <button id="tNavHistory" onclick="showTeacherPage('teacherHistory')">
+                📜 Competition History
+            </button>
+            <button id="tNavProfile" onclick="openTeacherProfileModal()">
+                👤 Profile
+            </button>
+        </nav>
+
+        <div class="nav-right">
+            <span id="teacherNavUser" class="teacher-name-tag" onclick="openTeacherProfileModal()" style="cursor: pointer;" title="Click to view Teacher Profile">
+                Prof. Educator
+            </span>
+            <button class="theme-btn" onclick="toggleTheme()">
+                🌙
+            </button>
+            <button class="logout-btn" onclick="teacherLogout()">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- TEACHER DASHBOARD -->
+    <section id="teacherDashboard" class="page teacher-page active">
+        <div class="hero teacher-hero">
+            <div>
+                <p class="small-title">
+                    TEACHER COMMAND CENTER 👨‍🏫
+                </p>
+                <h1>
+                    Welcome, <span id="teacherHeroName">Professor</span>!
+                </h1>
+                <h2>
+                    Ready to host your next Live Quiz Competition?
+                </h2>
+                <p class="hero-text">
+                    Create a Kahoot-style room, invite up to 100+ students via QR code or competition pin, and watch live synchronized leaderboards!
+                </p>
+                <div class="hero-actions">
+                    <button class="primary-btn teacher-primary-btn" onclick="openStaffQuizBuilder()">
+                        ✍️ Create Quiz
+                    </button>
+                    <button class="secondary-btn" onclick="showTeacherPage('teacherCreate'); switchCreateTab('auto');">
+                        ⚡ Auto Competition
+                    </button>
+                    <button class="secondary-btn" onclick="showTeacherPage('teacherHistory')">
+                        📊 Past Results
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero-card teacher-stats-card">
+                <div class="hero-trophy">
+                    🏆
+                </div>
+                <p>Live Competition Suite</p>
+                <h2 id="teacherTotalCompetitions">0</h2>
+                <span>Competitions Hosted</span>
+            </div>
+        </div>
+
+        <!-- TEACHER STATS -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div>
+                    <p>Total Competitions</p>
+                    <h2 id="tStatCompetitions">0</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div>
+                    <p>Total Students Engaged</p>
+                    <h2 id="tStatStudents">0</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div>
+                    <p>Average Accuracy</p>
+                    <h2 id="tStatAvgAccuracy">0%</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div>
+                    <p>Room Capacity</p>
+                    <h2>100+ Max</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVE COMPETITION BANNER (IF ANY) -->
+        <div id="activeCompetitionBanner" class="active-competition-banner hidden">
+            <div class="banner-content">
+                <div class="live-dot-pulse"></div>
+                <div>
+                    <h3>Active Competition Running!</h3>
+                    <p id="activeCompetitionBannerText">Room: SKQ-123456 | Subject: Java</p>
+                </div>
+            </div>
+            <button class="primary-btn" onclick="resumeActiveCompetition()">
+                Rejoin Room 🚀
+            </button>
+        </div>
+
+        <!-- QUICK COMPETITION TEMPLATES -->
+        <div class="section-card">
+            <div class="section-heading">
+                <div>
+                    <p class="small-title">QUICK LAUNCH</p>
+                    <h2>Popular Quiz Subjects</h2>
+                </div>
+            </div>
+            <div class="subject-grid">
+                <div class="subject-card" onclick="quickCreateCompetition('Java')">
+                    <div class="subject-icon java">☕</div>
+                    <h2>Java Battle</h2>
+                    <p>OOP, Threads, Collections & JVM</p>
+                    <span>Create Live Quiz →</span>
+                </div>
+                <div class="subject-card" onclick="quickCreateCompetition('Python')">
+                    <div class="subject-icon python">🐍</div>
+                    <h2>Python Clash</h2>
+                    <p>Data Structures, Functions & OOP</p>
+                    <span>Create Live Quiz →</span>
+                </div>
+                <div class="subject-card" onclick="quickCreateCompetition('SQL')">
+                    <div class="subject-icon sql">🗄️</div>
+                    <h2>SQL Arena</h2>
+                    <p>Joins, Aggregate Functions & Schema</p>
+                    <span>Create Live Quiz →</span>
+                </div>
+                <div class="subject-card" onclick="quickCreateCompetition('DBMS')">
+                    <div class="subject-icon dbms">🧠</div>
+                    <h2>DBMS Master</h2>
+                    <p>ACID, Normalization, Indexing</p>
+                    <span>Create Live Quiz →</span>
+                </div>
+                <div class="subject-card" onclick="quickCreateCompetition('Web Development')">
+                    <div class="subject-icon web">🌐</div>
+                    <h2>Web Dev Showdown</h2>
+                    <p>HTML5, Modern CSS, ES6+ JS</p>
+                    <span>Create Live Quiz →</span>
+                </div>
+                <div class="subject-card" onclick="quickCreateCompetition('DSA')">
+                    <div class="subject-icon dsa">📊</div>
+                    <h2>DSA Grand Prix</h2>
+                    <p>Arrays, Trees, Graphs, DP</p>
+                    <span>Create Live Quiz →</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER CREATE COMPETITION -->
+    <section id="teacherCreate" class="page teacher-page">
+        <div class="page-heading">
+            <p class="small-title">QUIZ CREATION STUDIO 🎨</p>
+            <h1>Create Quiz & Competition</h1>
+            <p>Design your own custom questions or auto-generate a competition room instantly.</p>
+        </div>
+
+        <!-- CREATE QUIZ MODE TABS -->
+        <div class="create-mode-tabs-container">
+            <button id="tabBtnCustomQuiz" class="create-mode-tab-btn active" onclick="switchCreateTab('custom')">
+                <span>✍️</span> Staff-Created Quiz
+            </button>
+            <button id="tabBtnAutoQuiz" class="create-mode-tab-btn" onclick="switchCreateTab('auto')">
+                <span>⚡</span> Auto-Generate from Subject
+            </button>
+        </div>
+
+        <!-- STAFF QUIZ BUILDER PANEL -->
+        <div id="staffQuizBuilderPanel" class="staff-builder-container">
+            <!-- QUIZ DETAILS CARD -->
+            <div class="staff-builder-card meta-card">
+                <div class="card-title-row">
+                    <div>
+                        <h2>1. Quiz Information & Settings</h2>
+                        <p class="section-subtitle">Set your quiz title, subject tag, and default answer time.</p>
+                    </div>
+                    <div class="quiz-total-badge-container">
+                        <span class="total-badge-label">Total Questions</span>
+                        <span id="staffQCountBadge" class="total-badge-number">0</span>
+                    </div>
+                </div>
+
+                <div class="staff-form-grid">
+                    <div class="input-group">
+                        <label for="staffQuizTitle">Quiz Title <span class="required-star" style="color: #ef4444;">*</span></label>
+                        <input type="text" id="staffQuizTitle" placeholder="e.g. Midterm Assessment: Operating Systems & Algorithms" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="staffQuizSubject">Subject / Category</label>
+                        <input type="text" id="staffQuizSubject" placeholder="e.g. Computer Science" value="Staff Quiz">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="staffQuizDuration">Time per Question</label>
+                        <select id="staffQuizDuration">
+                            <option value="30">30 Seconds (Fast paced)</option>
+                            <option value="45">45 Seconds</option>
+                            <option value="60" selected>60 Seconds (Standard)</option>
+                            <option value="90">90 Seconds (Complex calculation)</option>
+                            <option value="120">120 Seconds (Problem solving)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- QUICK PRESET SHORTCUTS -->
+                <div class="preset-shortcuts-box">
+                    <span class="preset-label">⚡ Quick Add Slots:</span>
+                    <div class="preset-pills">
+                        <button type="button" class="preset-pill" onclick="presetCustomQuestions(5)">+ 5 Questions</button>
+                        <button type="button" class="preset-pill" onclick="presetCustomQuestions(10)">+ 10 Questions</button>
+                        <button type="button" class="preset-pill" onclick="presetCustomQuestions(15)">+ 15 Questions</button>
+                        <button type="button" class="preset-pill" onclick="presetCustomQuestions(20)">+ 20 Questions</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS BUILDER CARD -->
+            <div class="staff-builder-card questions-card">
+                <div class="card-title-row">
+                    <div>
+                        <h2>2. Questions & Answer Choices</h2>
+                        <p class="section-subtitle">Every question must contain question text, 4 options (A, B, C, D), and 1 correct answer selection.</p>
+                    </div>
+                    <button type="button" class="secondary-btn add-q-top-btn" onclick="addCustomQuestion()">
+                        ➕ Add Question
+                    </button>
+                </div>
+
+                <!-- QUESTIONS CONTAINER (DYNAMICALLY POPULATED) -->
+                <div id="staffQuestionsList" class="staff-questions-list">
+                    <!-- Dynamic Question Cards generated here -->
+                </div>
+
+                <!-- BUILDER BOTTOM CONTROLS -->
+                <div class="staff-builder-actions">
+                    <div class="actions-left">
+                        <button type="button" class="secondary-btn" onclick="addCustomQuestion()">
+                            ➕ Add Question
+                        </button>
+                        <button type="button" class="secondary-btn" onclick="saveCustomQuizDraft()">
+                            💾 Save Draft
+                        </button>
+                    </div>
+
+                    <div class="actions-right">
+                        <button type="button" class="primary-btn teacher-primary-btn publish-btn" onclick="publishStaffCreatedQuiz()">
+                            🚀 Publish Quiz & Generate QR Code →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTO GENERATE QUIZ PANEL (EXISTING CONTAINER) -->
+        <div id="autoQuizBuilderPanel" class="create-competition-container hidden">
+            <div class="config-card">
+                <h2>1. Select Subject & Questions</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Select Subject</label>
+                        <select id="compSubjectSelect" onchange="onSubjectConfigChange()">
+                            <option value="Java">☕ Java Programming</option>
+                            <option value="Python">🐍 Python</option>
+                            <option value="SQL">🗄️ SQL & Databases</option>
+                            <option value="DBMS">🧠 DBMS Concepts</option>
+                            <option value="Web Development">🌐 Web Development</option>
+                            <option value="DSA">📊 Data Structures & Algorithms</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Number of Questions</label>
+                        <select id="compQuestionCountSelect" onchange="onSubjectConfigChange()">
+                            <option value="5" selected>5 Questions (Quick Match - ~5 mins)</option>
+                            <option value="10">10 Questions (Standard - ~10 mins)</option>
+                            <option value="15">15 Questions (Full Championship)</option>
+                            <option value="20">20 Questions (Grand Marathon)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Time per Question</label>
+                        <input type="text" value="60 Seconds (Standard Kahoot Countdown)" disabled style="background: rgba(0,0,0,0.05);">
+                    </div>
+                </div>
+
+                <div class="config-actions">
+                    <button class="secondary-btn" onclick="generateRandomQuestionSet()">
+                        🎲 Regenerate Question Set
+                    </button>
+                    <button class="primary-btn teacher-primary-btn" onclick="launchCompetitionLobby()">
+                        🚀 Generate Competition Code & QR →
+                    </button>
+                </div>
+            </div>
+
+            <!-- QUESTION REVIEW CONTAINER -->
+            <div class="review-questions-card">
+                <div class="review-header">
+                    <div>
+                        <h3>2. Review Questions (<span id="reviewCountBadge">5</span> Questions Selected)</h3>
+                        <p>All questions are 4-option MCQs. Correct answers are highlighted for teacher review.</p>
+                    </div>
+                </div>
+
+                <div id="questionReviewList" class="question-review-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER WAITING ROOM -->
+    <section id="teacherWaitingRoom" class="page teacher-page">
+        <div class="waiting-room-header">
+            <div class="live-pill">
+                <span class="live-indicator-dot"></span> LIVE LOBBY
+            </div>
+            <h1>Competition Waiting Room</h1>
+            <p>Share the Competition Code or QR code on projector/screen. Students can join instantly!</p>
+        </div>
+
+        <div class="lobby-grid">
+            <!-- LEFT: CODE & QR CARD -->
+            <div class="lobby-info-card">
+                <div class="code-box">
+                    <span class="code-label">JOIN CODE</span>
+                    <h1 id="tLobbyCode" class="lobby-code-display">SKQ-000000</h1>
+                    <div class="code-actions">
+                        <button class="copy-btn" onclick="copyCompetitionCode()">
+                            📋 Copy Code
+                        </button>
+                        <button class="copy-btn" onclick="copyCompetitionLink()">
+                            🔗 Copy Direct Link
+                        </button>
+                    </div>
+                </div>
+
+                <div class="qr-container">
+                    <div id="teacherQrCode" class="qr-code-box"></div>
+                    <p class="qr-caption">📱 Scan with phone camera to join directly</p>
+                    <p id="tLobbyJoinUrl" class="qr-caption" style="word-break: break-all; font-size: 0.75rem; opacity: 0.75;"></p>
+                </div>
+
+                <div class="lobby-meta-pills">
+                    <span id="tLobbySubjectBadge" class="meta-pill">☕ Java</span>
+                    <span id="tLobbyQuestionsBadge" class="meta-pill">📝 5 Questions</span>
+                    <span class="meta-pill">⏱️ 60s per Question</span>
+                    <span class="meta-pill">👥 Max 100 Students</span>
+                </div>
+            </div>
+
+            <!-- RIGHT: LIVE PARTICIPANTS -->
+            <div class="lobby-participants-card">
+                <div class="participants-header">
+                    <div>
+                        <h2>Students Joined</h2>
+                        <p>Real-time live student roster</p>
+                    </div>
+                    <div class="counter-badge">
+                        <span id="tLobbyStudentCount">0</span> / 100
+                    </div>
+                </div>
+
+                <div class="participant-progress-wrap">
+                    <div id="tLobbyProgressBar" class="participant-progress-fill" style="width: 0%;"></div>
+                </div>
+
+                <div id="tLobbyStudentsList" class="joined-students-grid">
+                    <div class="waiting-placeholder">
+                        <div class="radar-pulse"></div>
+                        <p>Waiting for students to enter code & join...</p>
+                    </div>
+                </div>
+
+                <div class="lobby-controls">
+                    <button class="secondary-btn" onclick="cancelCompetition()">
+                        ❌ Cancel
+                    </button>
+                    <button id="tStartQuizBtn" class="primary-btn start-quiz-large-btn" onclick="startLiveQuiz()">
+                        🚀 START QUIZ NOW
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER LIVE QUIZ HOST SCREEN -->
+    <section id="teacherLiveQuiz" class="page teacher-page">
+        <div class="live-host-container">
+            <div class="live-host-topbar">
+                <div class="topbar-left">
+                    <span id="tLiveSubjectPill" class="live-pill">☕ Java</span>
+                    <span id="tLiveQuestionNumber" class="question-tracker">Question 1 of 5</span>
+                </div>
+
+                <!-- 60s SYNCHRONIZED TIMER -->
+                <div class="live-timer-wrap">
+                    <div class="timer-circle-ring">
+                        <span id="tLiveTimer" class="timer-number">60</span>
+                    </div>
+                    <span class="timer-unit">SECONDS</span>
+                </div>
+
+                <div class="topbar-right">
+                    <span class="live-status-chip">🔴 Synchronized Live</span>
+                </div>
+            </div>
+
+            <!-- QUESTION CARD -->
+            <div class="live-question-card">
+                <h1 id="tLiveQuestionText" class="live-question-title">
+                    Question text will appear here...
+                </h1>
+            </div>
+
+            <!-- 4 MCQ OPTIONS PREVIEW (TEACHER VIEW) -->
+            <div class="live-options-grid">
+                <div class="live-option-box opt-a">
+                    <div class="opt-tag">A</div>
+                    <div id="tOptTextA" class="opt-text">Option A</div>
+                </div>
+                <div class="live-option-box opt-b">
+                    <div class="opt-tag">B</div>
+                    <div id="tOptTextB" class="opt-text">Option B</div>
+                </div>
+                <div class="live-option-box opt-c">
+                    <div class="opt-tag">C</div>
+                    <div id="tOptTextC" class="opt-text">Option C</div>
+                </div>
+                <div class="live-option-box opt-d">
+                    <div class="opt-tag">D</div>
+                    <div id="tOptTextD" class="opt-text">Option D</div>
+                </div>
+            </div>
+
+            <!-- LIVE ANSWER SUBMISSIONS STATUS -->
+            <div class="live-submission-tracker">
+                <div class="tracker-info">
+                    <span>Student Submissions: <strong id="tAnswersSubmittedCount">0</strong> / <span id="tTotalParticipantsCount">0</span></span>
+                    <span id="tAnswerPercentage">0%</span>
+                </div>
+                <div class="tracker-bar-bg">
+                    <div id="tSubmissionProgressBar" class="tracker-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- LIVE PER-STUDENT ANSWERS (collapse before projecting: it shows the correct answer) -->
+            <details class="live-answers-panel" open style="margin-top: 18px;">
+                <summary style="cursor: pointer; font-weight: 800; margin-bottom: 10px;">👀 Live Student Answers (teacher view)</summary>
+                <div id="tLiveAnswersTable" class="leaderboard-table-container"></div>
+            </details>
+
+            <div class="live-host-bottom-actions">
+                <button class="secondary-btn" onclick="forceEndQuestionTimer()">
+                    ⏱️ End Question Early (Reveal Result)
+                </button>
+                <button class="secondary-btn" onclick="endLiveQuiz()">
+                    🏁 End Quiz
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER QUESTION RESULT (BAR GRAPH) -->
+    <section id="teacherResult" class="page teacher-page">
+        <div class="result-screen-container">
+            <div class="result-header">
+                <div class="times-up-badge">⏱️ TIME'S UP!</div>
+                <h1>Question Result & Response Distribution</h1>
+                <p id="tResultQuestionTitle">Question title...</p>
+            </div>
+
+            <!-- ANSWER DISTRIBUTION BAR GRAPH -->
+            <div class="bar-graph-container">
+                <div class="graph-y-axis">
+                    <span>100%</span>
+                    <span>75%</span>
+                    <span>50%</span>
+                    <span>25%</span>
+                    <span>0%</span>
+                </div>
+
+                <div class="graph-bars-wrapper">
+                    <!-- BAR A -->
+                    <div class="graph-column col-a" id="colBarA">
+                        <div class="bar-value" id="valBarA">0 (0%)</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-a" id="pillarA" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-label-box">
+                            <span class="bar-letter">A</span>
+                            <span class="bar-preview" id="previewA">Option A</span>
+                        </div>
+                    </div>
+
+                    <!-- BAR B -->
+                    <div class="graph-column col-b" id="colBarB">
+                        <div class="bar-value" id="valBarB">0 (0%)</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-b" id="pillarB" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-label-box">
+                            <span class="bar-letter">B</span>
+                            <span class="bar-preview" id="previewB">Option B</span>
+                        </div>
+                    </div>
+
+                    <!-- BAR C -->
+                    <div class="graph-column col-c" id="colBarC">
+                        <div class="bar-value" id="valBarC">0 (0%)</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-c" id="pillarC" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-label-box">
+                            <span class="bar-letter">C</span>
+                            <span class="bar-preview" id="previewC">Option C</span>
+                        </div>
+                    </div>
+
+                    <!-- BAR D -->
+                    <div class="graph-column col-d" id="colBarD">
+                        <div class="bar-value" id="valBarD">0 (0%)</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-d" id="pillarD" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-label-box">
+                            <span class="bar-letter">D</span>
+                            <span class="bar-preview" id="previewD">Option D</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORRECT ANSWER BANNER -->
+            <div id="tCorrectAnswerBanner" class="correct-answer-banner">
+                <span class="check-icon">✓</span>
+                <div>
+                    <span class="banner-sub">CORRECT ANSWER</span>
+                    <h2 id="tCorrectAnswerText">C — Option Text — CORRECT ANSWER</h2>
+                </div>
+            </div>
+
+            <!-- RESULT SUMMARY METRICS -->
+            <div class="result-metrics-row">
+                <div class="res-metric-card">
+                    <span>Total Answered</span>
+                    <strong id="tTotalAnsweredCount">0</strong>
+                </div>
+                <div class="res-metric-card">
+                    <span>Unanswered / Timed Out</span>
+                    <strong id="tTotalUnansweredCount">0</strong>
+                </div>
+                <div class="res-metric-card">
+                    <span>Accuracy Rate</span>
+                    <strong id="tAccuracyRate">0%</strong>
+                </div>
+            </div>
+
+            <div class="live-leaderboard-card" style="margin-top: 18px;">
+                <div id="tResultAnswersTable" class="leaderboard-table-container"></div>
+            </div>
+
+            <div class="result-actions">
+                <button class="primary-btn teacher-primary-btn proceed-btn" onclick="showLiveLeaderboard()">
+                    View Live Leaderboard 🏅 →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER LIVE LEADERBOARD -->
+    <section id="teacherLeaderboard" class="page teacher-page">
+        <div class="leaderboard-screen-container">
+            <div class="page-heading">
+                <p class="small-title">LIVE RANKINGS</p>
+                <h1>Live Leaderboard 🏅</h1>
+                <p id="tLeaderboardSubtitle">Scores after Question 1</p>
+            </div>
+
+            <div class="live-leaderboard-card">
+                <div id="tLeaderboardTableContainer" class="leaderboard-table-container">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <div class="leaderboard-actions">
+                <button class="secondary-btn" onclick="endLiveQuiz()">
+                    🏁 End Quiz
+                </button>
+                <button id="tNextQuestionBtn" class="primary-btn start-quiz-large-btn" onclick="proceedToNextQuestion()">
+                    Next Question ➡️
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER FINAL PODIUM -->
+    <section id="teacherPodium" class="page teacher-page">
+        <div class="podium-screen-container">
+            <div class="podium-header">
+                <div class="trophy-bounce">🏆</div>
+                <p class="small-title">COMPETITION CONCLUDED</p>
+                <h1>Grand Champions Podium 🌟</h1>
+                <p id="tPodiumSubtitle">Congratulations to all participants!</p>
+            </div>
+
+            <!-- TOP 3 PODIUM DISPLAY -->
+            <div class="podium-stage">
+                <!-- 2ND PLACE (SILVER) -->
+                <div class="podium-column silver-col" id="podium2nd">
+                    <div class="winner-avatar">🥈</div>
+                    <div class="winner-name" id="podium2Name">-</div>
+                    <div class="winner-score" id="podium2Score">0 pts</div>
+                    <div class="pedestal pedestal-2">
+                        <span>2ND</span>
+                    </div>
+                </div>
+
+                <!-- 1ST PLACE (GOLD) -->
+                <div class="podium-column gold-col" id="podium1st">
+                    <div class="crown-icon">👑</div>
+                    <div class="winner-avatar">🥇</div>
+                    <div class="winner-name" id="podium1Name">-</div>
+                    <div class="winner-score" id="podium1Score">0 pts</div>
+                    <div class="pedestal pedestal-1">
+                        <span>1ST</span>
+                    </div>
+                </div>
+
+                <!-- 3RD PLACE (BRONZE) -->
+                <div class="podium-column bronze-col" id="podium3rd">
+                    <div class="winner-avatar">🥉</div>
+                    <div class="winner-name" id="podium3Name">-</div>
+                    <div class="winner-score" id="podium3Score">0 pts</div>
+                    <div class="pedestal pedestal-3">
+                        <span>3RD</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLETE FINAL RANKINGS TABLE -->
+            <div class="final-leaderboard-card">
+                <h3>Complete Final Standings</h3>
+                <div id="tFinalLeaderboardTableContainer" class="leaderboard-table-container">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <div class="podium-actions">
+                <button class="primary-btn teacher-primary-btn" onclick="saveAndFinishCompetition()">
+                    💾 Save to History & Return to Dashboard
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHER COMPETITION HISTORY -->
+    <section id="teacherHistory" class="page teacher-page">
+        <div class="history-container">
+            <div class="page-heading">
+                <p class="small-title">HOST ARCHIVES</p>
+                <h1>Competition History 📜</h1>
+                <p>Review past competitions, final leaderboards, and student engagement records.</p>
+            </div>
+
+            <div id="teacherHistoryList" class="competition-history-grid">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- =====================================================
+     STUDENT LIVE QUIZ APPLICATION
+===================================================== -->
+<div id="studentLiveApp" class="hidden">
+    <!-- STUDENT LIVE NAVBAR -->
+    <header class="navbar student-live-navbar">
+        <div class="logo" onclick="exitStudentLiveQuiz()">
+            <span>⚡</span>
+            QuizMaster <small class="portal-badge live-mode-badge">Live</small>
+        </div>
+
+        <div class="nav-right">
+            <span id="sLivePlayerNameBadge" class="student-name-tag">
+                Student
+            </span>
+            <button class="theme-btn" onclick="toggleTheme()">
+                🌙
+            </button>
+            <button class="logout-btn" onclick="exitStudentLiveQuiz()">
+                Exit
+            </button>
+        </div>
+    </header>
+
+    <!-- STUDENT JOIN PAGE -->
+    <section id="studentJoinPage" class="auth-page student-join-screen">
+        <div class="auth-card student-join-card">
+            <div class="auth-logo live-logo-badge">
+                ⚡
+            </div>
+            <h2>Join Live Competition</h2>
+            <p>Enter the Competition Code and your Name.</p>
+
+            <div id="sJoinRoomPreview" class="join-room-preview hidden"></div>
+
+            <div class="input-group">
+                <label>Competition Code / PIN</label>
+                <input type="text" id="sJoinCodeInput" placeholder="e.g. SKQ-482731" uppercase maxlength="12" style="font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; text-align: center;">
+            </div>
+
+            <div class="input-group">
+                <label>Your Name / Nickname</label>
+                <input type="text" id="sJoinNameInput" placeholder="Enter your full name" maxlength="25">
+            </div>
+
+            <p id="sJoinError" class="auth-error"></p>
+
+            <div style="display: flex; gap: 10px; margin-top: 12px;">
+                <button class="secondary-btn full-btn" type="button" onclick="scanCompetitionQrCode()" style="flex: 1;">
+                    📷 Scan QR
+                </button>
+                <button class="primary-btn full-btn live-action-btn" onclick="joinLiveCompetition()" style="flex: 1;">
+                    Join Competition 🚀
+                </button>
+            </div>
+
+            <button class="secondary-btn full-btn" style="margin-top: 10px;" onclick="exitStudentLiveQuiz()">
+                ← Back to Main Menu
+            </button>
+
+            <div id="sQrScannerContainer" class="hidden" style="margin-top: 18px; border: 1px solid rgba(148,163,184,.3); border-radius: 14px; background: rgba(15,23,42,.45); padding: 12px;">
+                <div id="reader" style="width: 100%; min-height: 250px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STUDENT WAITING ROOM -->
+    <section id="studentWaitingRoom" class="page student-live-page">
+        <div class="student-waiting-container">
+            <div class="live-pill">
+                <span class="live-indicator-dot"></span> CONNECTED TO LOBBY
+            </div>
+
+            <h1 id="sWaitingSubjectTitle">Java Live Battle</h1>
+            <div class="student-profile-chip">
+                <span>Joined as:</span>
+                <strong id="sWaitingPlayerName">Student</strong>
+            </div>
+
+            <div class="waiting-radar-box">
+                <div class="radar-pulse"></div>
+                <div class="waiting-spinner-glow">⏳</div>
+                <h2 id="sWaitingStatusHeading">Waiting for the host to start the quiz...</h2>
+                <p>Questions will automatically appear on your screen once the teacher begins the match.</p>
+            </div>
+
+            <div class="waiting-stats-card">
+                <p>Students In Lobby</p>
+                <h2 id="sWaitingStudentCount">1</h2>
+                <span>Synchronized Room</span>
+            </div>
+
+            <!-- Live participant chips populated by Firestore listener -->
+            <div id="sWaitingParticipantList" class="waiting-participant-list">
+                <!-- chips added dynamically -->
+            </div>
+
+            <button class="secondary-btn" onclick="exitStudentLiveQuiz()">
+                Leave Lobby
+            </button>
+        </div>
+    </section>
+
+    <!-- STUDENT LIVE QUIZ QUESTION SCREEN -->
+    <section id="studentLiveQuiz" class="page student-live-page">
+        <div class="student-quiz-container">
+            <div class="student-quiz-meta-header">
+                <h3 id="sLiveQuizTitle">Live Quiz</h3>
+                <span id="sLiveSubjectBadge" class="meta-pill">Subject</span>
+            </div>
+
+            <div class="student-quiz-top">
+                <div class="q-badge" id="sLiveQBadge">Question 1 of 5</div>
+                <div class="student-score-tag" id="sLiveScoreBadge">
+                    Score: 0 pts
+                </div>
+                <div class="student-timer-box" id="sTimerBox">
+                    ⏱️ <span id="sLiveTimer">60</span>s
+                </div>
+            </div>
+
+            <div class="student-question-card">
+                <h2 id="sLiveQuestionText">Loading live question...</h2>
+            </div>
+
+            <!-- 4 KAHOOT-STYLE INTERACTIVE BUTTONS -->
+            <div class="student-options-grid" id="sStudentOptionsGrid">
+                <button class="student-option-btn s-opt-a" onclick="submitStudentLiveAnswer(0)">
+                    <span class="btn-tag">[A]</span>
+                    <span class="btn-text" id="sOptTextA">Option A</span>
+                </button>
+
+                <button class="student-option-btn s-opt-b" onclick="submitStudentLiveAnswer(1)">
+                    <span class="btn-tag">[B]</span>
+                    <span class="btn-text" id="sOptTextB">Option B</span>
+                </button>
+
+                <button class="student-option-btn s-opt-c" onclick="submitStudentLiveAnswer(2)">
+                    <span class="btn-tag">[C]</span>
+                    <span class="btn-text" id="sOptTextC">Option C</span>
+                </button>
+
+                <button class="student-option-btn s-opt-d" onclick="submitStudentLiveAnswer(3)">
+                    <span class="btn-tag">[D]</span>
+                    <span class="btn-text" id="sOptTextD">Option D</span>
+                </button>
+            </div>
+
+            <p id="sLiveSelectPrompt" style="text-align: center; color: var(--muted); font-size: 0.95rem; font-weight: 600; margin: 10px 0 16px 0;">
+                Select one answer
+            </p>
+
+            <div id="sAnswerFeedback" class="student-feedback-box hidden">
+                <span class="feedback-icon" id="sFeedbackIcon">🔒</span>
+                <div class="feedback-text-wrap" id="sFeedbackWrap" style="text-align: left; flex: 1;">
+                    <div id="sFeedbackTitle" style="font-size: 1.15rem; font-weight: 800;">Answer submitted!</div>
+                    <div id="sFeedbackSub" style="font-size: 0.95rem; margin-top: 3px; font-weight: 700;"></div>
+                    <div id="sFeedbackWaiting" style="font-size: 0.85rem; margin-top: 4px; opacity: 0.85;">Waiting for the host to move to the next question...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STUDENT QUESTION RESULT SCREEN -->
+    <section id="studentResult" class="page student-live-page">
+        <div class="student-result-container">
+            <div id="sResultBanner" class="s-result-banner banner-correct">
+                <span id="sResultIcon" class="s-res-icon">🎉</span>
+                <h1 id="sResultStatus">Correct!</h1>
+                <p id="sResultPoints">+1,420 Points</p>
+            </div>
+
+            <div class="bar-graph-card">
+                <h3>Class Response Breakdown</h3>
+                <div class="graph-bars-wrapper small-graph">
+                    <div class="graph-column" id="sColBarA">
+                        <div class="bar-value" id="sValBarA">0</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-a" id="sPillarA" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-letter">A</div>
+                    </div>
+                    <div class="graph-column" id="sColBarB">
+                        <div class="bar-value" id="sValBarB">0</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-b" id="sPillarB" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-letter">B</div>
+                    </div>
+                    <div class="graph-column" id="sColBarC">
+                        <div class="bar-value" id="sValBarC">0</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-c" id="sPillarC" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-letter">C</div>
+                    </div>
+                    <div class="graph-column" id="sColBarD">
+                        <div class="bar-value" id="sValBarD">0</div>
+                        <div class="bar-pillar-wrap">
+                            <div class="bar-pillar bar-color-d" id="sPillarD" style="height: 0%;"></div>
+                        </div>
+                        <div class="bar-letter">D</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="student-wait-next">
+                <div class="pulse-mini"></div>
+                <p>Teacher is reviewing results. Next question coming up...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- STUDENT LIVE LEADERBOARD SCREEN -->
+    <section id="studentLeaderboard" class="page student-live-page">
+        <div class="student-leaderboard-container">
+            <div class="page-heading">
+                <p class="small-title">LIVE STANDINGS</p>
+                <h1>Current Leaderboard 🏅</h1>
+            </div>
+
+            <div class="my-score-badge">
+                <span>Your Total Score</span>
+                <h2 id="sMyLiveScore">0 pts</h2>
+                <span id="sMyLiveRank">Rank #1</span>
+            </div>
+
+            <div class="live-leaderboard-card">
+                <div id="sLeaderboardTableContainer" class="leaderboard-table-container">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <p class="waiting-prompt">Waiting for teacher to continue...</p>
+        </div>
+    </section>
+
+    <!-- STUDENT PODIUM SCREEN -->
+    <section id="studentPodium" class="page student-live-page">
+        <div class="podium-screen-container">
+            <div class="podium-header">
+                <div class="trophy-bounce">🏆</div>
+                <h1>Match Finished!</h1>
+                <p id="sPodiumCongrats">Awesome effort in this competition!</p>
+            </div>
+
+            <div class="my-final-result-card" id="sMyFinalResultCard">
+                <span class="final-medal" id="sMyFinalMedal">🏅</span>
+                <h2 id="sMyFinalRankText">You placed 1st!</h2>
+                <p id="sMyFinalScoreText">Total Score: 4,850 pts</p>
+            </div>
+
+            <!-- PODIUM TOP 3 -->
+            <div class="podium-stage">
+                <div class="podium-column silver-col">
+                    <div class="winner-avatar">🥈</div>
+                    <div class="winner-name" id="sPodium2Name">-</div>
+                    <div class="winner-score" id="sPodium2Score">0 pts</div>
+                    <div class="pedestal pedestal-2"><span>2ND</span></div>
+                </div>
+                <div class="podium-column gold-col">
+                    <div class="crown-icon">👑</div>
+                    <div class="winner-avatar">🥇</div>
+                    <div class="winner-name" id="sPodium1Name">-</div>
+                    <div class="winner-score" id="sPodium1Score">0 pts</div>
+                    <div class="pedestal pedestal-1"><span>1ST</span></div>
+                </div>
+                <div class="podium-column bronze-col">
+                    <div class="winner-avatar">🥉</div>
+                    <div class="winner-name" id="sPodium3Name">-</div>
+                    <div class="winner-score" id="sPodium3Score">0 pts</div>
+                    <div class="pedestal pedestal-3"><span>3RD</span></div>
+                </div>
+            </div>
+            
+            <div class="podium-leaderboard-wrap" style="margin-top: 25px; text-align: left;">
+                <h3 style="margin-bottom: 12px; font-size: 1.2rem; text-align: center;">Final Match Standings 📊</h3>
+                <div id="sDetailedLeaderboardContainer" class="leaderboard-table-container"></div>
+            </div>
+
+            <div class="podium-actions" style="margin-top: 20px;">
+                <button class="primary-btn full-btn" onclick="exitStudentLiveQuiz()">
+                    🏠 Back to Main Menu
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- =====================================================
+     COMPETITION DETAIL MODAL (TEACHER HISTORY)
+===================================================== -->
+<div id="competitionDetailModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div>
+                <h2 id="modalCompTitle">Competition Details</h2>
+                <p id="modalCompMeta">Code: SKQ-000000 | Date: 2026-09-22</p>
+            </div>
+            <button class="close-modal-btn" onclick="closeCompetitionDetailModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="modal-stats-row">
+                <div class="m-stat">
+                    <span>Subject</span>
+                    <strong id="modalCompSubject">Java</strong>
+                </div>
+                <div class="m-stat">
+                    <span>Questions</span>
+                    <strong id="modalCompQuestions">5</strong>
+                </div>
+                <div class="m-stat">
+                    <span>Participants</span>
+                    <strong id="modalCompParticipants">0</strong>
+                </div>
+                <div class="m-stat">
+                    <span>Winner</span>
+                    <strong id="modalCompWinner">-</strong>
+                </div>
+            </div>
+
+            <div class="modal-leaderboard-section">
+                <h3>Final Leaderboard Standings</h3>
+                <div id="modalLeaderboardContent" class="leaderboard-table-container">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="primary-btn" onclick="closeCompetitionDetailModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================
+     TEACHER PROFILE MODAL
+===================================================== -->
+<div id="teacherProfileModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div>
+                <h2>Teacher Profile 👨‍🏫</h2>
+                <p>Manage your instructor profile & teaching preferences</p>
+            </div>
+            <button class="close-modal-btn" onclick="closeTeacherProfileModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="profNameInput" placeholder="Prof. Jane Doe">
+                </div>
+                <div class="input-group">
+                    <label>Teacher ID</label>
+                    <input type="text" id="profTeacherIdInput" placeholder="TCH001" disabled style="opacity: 0.7;">
+                </div>
+                <div class="input-group">
+                    <label>Email (Firebase Auth)</label>
+                    <input type="email" id="profEmailInput" placeholder="teacher@college.edu" disabled style="opacity: 0.7;">
+                </div>
+                <div class="input-group">
+                    <label>Department</label>
+                    <input type="text" id="profDeptInput" placeholder="Information Technology">
+                </div>
+                <div class="input-group">
+                    <label>Phone</label>
+                    <input type="tel" id="profPhoneInput" placeholder="+1 (555) 019-2834">
+                </div>
+                <div class="input-group">
+                    <label>Subjects Taught</label>
+                    <input type="text" id="profSubjectsInput" placeholder="Java, Python, SQL, DBMS">
+                </div>
+            </div>
+            <p id="profSaveMsg" class="auth-error" style="margin-top: 10px;"></p>
+        </div>
+
+        <div class="modal-footer">
+            <button class="secondary-btn" onclick="closeTeacherProfileModal()">Cancel</button>
+            <button class="primary-btn teacher-primary-btn" onclick="saveTeacherProfile()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFETTI -->
+<div id="confetti"></div>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p id="loadingText">
+            Loading questions...
+        </p>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="toast"></div>
+
+<!-- QRCode.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<!-- Firebase SDKs (Compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="./firebase-init.js"></script>
+<script src="./script.js"></script>
+
+</body>
+</html>
