@@ -32,6 +32,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          
+      - name: Check Firebase secret availability
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        run: |
+          if [ -z "$FIREBASE_API_KEY" ]; then
+            echo "Firebase secret is EMPTY"
+            exit 1
+          else
+            echo "Firebase secret is AVAILABLE"
+          fi
 
       - name: Create Firebase initializer
         env:
