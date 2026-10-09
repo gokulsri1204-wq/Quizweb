@@ -1,0 +1,121 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Create Firebase initializer
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          if (!process.env.FIREBASE_API_KEY) {
+            throw new Error("The FIREBASE_API_KEY secret is not configured.");
+          }
+
+          const firebaseConfig = {
+            apiKey: process.env.FIREBASE_API_KEY,
+            authDomain: "quizquest-3d82a.firebaseapp.com",
+            projectId: "quizquest-3d82a",
+            storageBucket: "quizquest-3d82a.firebasestorage.app",
+            messagingSenderId: "258935637691",
+            appId: "1:258935637691:web:3e6b5af0ae7a4f022ecb9e",
+            measurementId: "G-FRCW084FTV"
+          };
+
+          const source = `// Firebase Initialization & Configuration
+          const firebaseConfig = ${JSON.stringify(firebaseConfig, null, 2)};
+
+          // Initialize Firebase App safely with validation
+          if (typeof firebase !== "undefined") {
+            try {
+              if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+              }
+              console.log("[SKQ Firebase] Firebase initialized successfully for project:", firebaseConfig.projectId);
+            } catch (initErr) {
+              console.error("[SKQ Firebase] Error during Firebase initialization:", initErr);
+            }
+          } else {
+            console.error("[SKQ Firebase] CRITICAL: Firebase SDK is not loaded. Check script tags in index.html.");
+          }
+
+          const auth = (typeof firebase !== "undefined" && typeof firebase.auth === "function") ? firebase.auth() : null;
+          const db = (typeof firebase !== "undefined" && typeof firebase.firestore === "function") ? firebase.firestore() : null;
+
+          if (db) {
+            console.log("[SKQ Firebase] Firestore database instance (db) is ready.");
+          } else {
+            console.error("[SKQ Firebase] Firestore database instance (db) failed to initialize.");
+          }
+          `;
+
+          fs.writeFileSync("firebase-init.js", source, { flag: "w" });
+          NODE
+
+      - name: Prepare Pages artifact
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp index.html script.js style.css firebase-init.js _site/
+
+      - name: Verify Pages artifact files
+        run: |
+          if [ ! -f firebase-init.js ]; then
+            echo "::error::Generated firebase-init.js is missing."
+            exit 1
+          fi
+          if [ ! -f _site/firebase-init.js ]; then
+            echo "::error::_site/firebase-init.js is missing."
+            exit 1
+          fi
+          if [ ! -s firebase-init.js ]; then
+            echo "::error::Generated firebase-init.js is empty."
+            exit 1
+          fi
+          if [ ! -s _site/firebase-init.js ]; then
+            echo "::error::_site/firebase-init.js is empty."
+            exit 1
+          fi
+          echo "Pages artifact files:"
+          find _site -maxdepth 2 -type f -print
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./_site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
